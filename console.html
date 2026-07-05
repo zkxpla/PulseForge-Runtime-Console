@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PulseForge Runtime Console</title>
+<style>
+    /* Layout uses full-screen grid split into control and output zones */
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #0f1115;
+        color: #e6e6e6;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        height: 100vh;
+    }
+
+    .panel {
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    .left {
+        background: #151922;
+        border-right: 1px solid #2a2f3a;
+    }
+
+    .right {
+        background: #0f1115;
+    }
+
+    textarea {
+        width: 100%;
+        height: 200px;
+        background: #1c2230;
+        color: #fff;
+        border: none;
+        padding: 10px;
+        resize: none;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 10px;
+        padding: 10px;
+        background: #3b82f6;
+        border: none;
+        color: white;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #2563eb;
+    }
+
+    .log {
+        font-family: monospace;
+        white-space: pre-wrap;
+        background: #111827;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-left: 3px solid #3b82f6;
+    }
+</style>
+</head>
+<body>
+
+<!-- Control Panel -->
+<div class="panel left">
+    <h2>Runtime Input</h2>
+    <textarea id="codeInput">// write instructions line by line</textarea>
+    <button onclick="launchSystem()">Launch System</button>
+</div>
+
+<!-- Output Panel -->
+<div class="panel right">
+    <h2>Execution Benchmark</h2>
+    <div id="output"></div>
+</div>
+
+<script>
+// ---------------- CORE STATE ENGINE ----------------
+
+// Internal execution state container (not global CRUD model)
+class RuntimeState {
+    constructor() {
+        this.steps = [];
+        this.counter = 0;
+    }
+
+    push(step) {
+        this.steps.push(step);
+    }
+
+    nextId() {
+        return ++this.counter;
+    }
+}
+
+// ---------------- EXECUTION PROCESSOR ----------------
+
+class InstructionProcessor {
+    process(line, state) {
+        // Transform raw instruction into structured event
+        return {
+            id: state.nextId(),
+            raw: line,
+            status: line.includes("run") ? "executed" : "queued",
+            timestamp: Date.now()
+        };
+    }
+}
+
+// ---------------- SYSTEM ORCHESTRATOR ----------------
+
+class RuntimeSystem {
+    constructor() {
+        this.state = new RuntimeState();
+        this.processor = new InstructionProcessor();
+    }
+
+    launch(codeBlock) {
+        const lines = codeBlock.split("\n").filter(l => l.trim().length > 0);
+
+        const results = lines.map(line =>
+            this.processor.process(line, this.state)
+        );
+
+        results.forEach(r => this.state.push(r));
+
+        return results;
+    }
+}
+
+// ---------------- VISUAL ENGINE ----------------
+
+function render(results) {
+    const out = document.getElementById("output");
+
+    results.forEach(r => {
+        const div = document.createElement("div");
+        div.className = "log";
+
+        div.textContent =
+            `ID: ${r.id}\n` +
+            `RAW: ${r.raw}\n` +
+            `STATUS: ${r.status}\n` +
+            `TIME: ${r.timestamp}`;
+em launch event
+    const result = system.launch(input);
+
+    render(result);
+}
+</script>
+
+</body>
+</html>
