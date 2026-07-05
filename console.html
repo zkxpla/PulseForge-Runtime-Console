@@ -146,7 +146,19 @@ function render(results) {
             `RAW: ${r.raw}\n` +
             `STATUS: ${r.status}\n` +
             `TIME: ${r.timestamp}`;
-em launch event
+
+        out.appendChild(div);
+    });
+}
+
+// ---------------- BOOT FUNCTION ----------------
+
+const system = new RuntimeSystem();
+
+function launchSystem() {
+    const input = document.getElementById("codeInput").value;
+
+    // Simulated system launch event
     const result = system.launch(input);
 
     render(result);
